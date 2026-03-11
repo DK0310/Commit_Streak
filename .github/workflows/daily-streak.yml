@@ -1,0 +1,27 @@
+name: Update Daily Streak
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-streak:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update streak
+        run: |
+          streak=$(grep -oP 'Day of Streak : \K[0-9]+' README.md)
+          new_streak=$((streak+1))
+          sed -i "s/Day of Streak : $streak/Day of Streak : $new_streak/" README.md
+
+      - name: Commit
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add README.md
+          git commit -m "🔥 Update streak"
+          git push
