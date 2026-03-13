@@ -1,8 +1,8 @@
-name: Update Daily Streak
+name: Daily Commit Streak
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "5 17 * * *"   # 00:05 giờ Việt Nam
   workflow_dispatch:
 
 permissions:
@@ -13,18 +13,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Update streak
         run: |
           streak=$(grep -oP 'Day of Streak : \K[0-9]+' README.md)
           new_streak=$((streak+1))
+
+          today=$(date +%Y-%m-%d)
+
           sed -i "s/Day of Streak : $streak/Day of Streak : $new_streak/" README.md
 
-      - name: Commit
+          if grep -q "Last Update :" README.md; then
+            sed -i "s/Last Update :.*/Last Update : $today/" README.md
+          else
+            echo "" >> README.md
+            echo "Last Update : $today" >> README.md
+          fi
+
+          echo "NEW_STREAK=$new_streak" >> $GITHUB_ENV
+          echo "TODAY=$today" >> $GITHUB_ENV
+
+      - name: Commit and push
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "DK0310"
+          git config --global user.email "lekhangdoan3@gmail.com"
+
           git add README.md
-          git commit -m "🔥 Update streak"
+          git commit -m "🔥 Day $NEW_STREAK streak — $TODAY" || echo "No changes"
           git push
