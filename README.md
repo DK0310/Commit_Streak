@@ -7,7 +7,7 @@ This repository is created to maintain a **daily GitHub commit streak**.
 - Keep GitHub activity active
 - Track daily learning & experimentation
 
-## 🗓 What I Commit Daily
+## What I Commit Daily
 - Minor updates (README edits, notes)
 - Small scripts or code snippets
 - Experiments, configs, or documentation
