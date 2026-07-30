@@ -1,0 +1,33 @@
+name: Daily Streak Commit
+
+on:
+  schedule:
+    # 00:05 Vietnam time (ICT, UTC+7) = 17:05 UTC the previous day
+    - cron: "5 17 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  streak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Bump streak day in README
+        run: |
+          CURRENT=$(sed -n 's/.*Day of Streak : \([0-9]\+\).*/\1/p' README.md)
+          NEXT=$((CURRENT + 1))
+          sed -i "s/Day of Streak : $CURRENT/Day of Streak : $NEXT/" README.md
+          echo "NEXT=$NEXT" >> "$GITHUB_ENV"
+          echo "CURRENT=$CURRENT" >> "$GITHUB_ENV"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update streak day from $CURRENT to $NEXT"
+          git push
