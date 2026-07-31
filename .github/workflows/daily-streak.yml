@@ -26,8 +26,8 @@ jobs:
 
       - name: Commit and push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Kevin Doan"
+          git config user.email "lekhangdoan3@gmail.com"
           git add README.md
           git commit -m "Update streak day from $CURRENT to $NEXT"
           git push
